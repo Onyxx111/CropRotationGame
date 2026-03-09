@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Crop Rotation Game</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <div class="main-container">
+
+        <!-- LEFT SIDEBAR -->
+
+        <div class="sidebar">
+
+            <h2>💡 Hint</h2>
+
+            <p>
+                Try placing crops in different plots.
+                Avoid planting the same type repeatedly in the same place.
+            </p>
+
+            <h2>💡 Notes on Rotation</h2>
+            <ul>
+                <li>Heavy feeders (corn, pumpkin) should not follow themselves; they should come after legumes or root
+                    crops.</li>
+                <li>Legumes (beans) can come after heavy feeders or light feeders.</li>
+                <li>Light feeders (tomato, lettuce) can follow legumes.</li>
+                <li>Root crops (carrot, potato) improve soil structure and often go after light feeders or legumes.</li>
+            </ul>
+
+        </div>
+
+
+        <!-- GAME AREA -->
+
+        <div class="game-area">
+
+            <h1>🌱 Crop Rotation Game</h1>
+
+            <!-- GAME INFO -->
+
+            <div class="game-info">
+                Round: <span id="round">1</span> |
+                Score: <span id="score">0</span>
+            </div>
+
+
+            <!-- GAME BOARD -->
+
+            <div class="game-container">
+
+                <!-- FARM PLOTS -->
+
+                <div class="plots">
+
+                    <div class="plot" id="plot1">Plot 1</div>
+
+                    <div class="plot" id="plot2">Plot 2</div>
+
+                    <div class="plot" id="plot3">Plot 3</div>
+
+                    <div class="plot" id="plot4">Plot 4</div>
+
+                </div>
+
+
+                <!-- DRAG CROPS -->
+
+                <div class="crops" id="cropContainer">
+
+                    <!-- JavaScript will generate crops here -->
+
+                </div>
+
+            </div>
+
+
+            <!-- RESET BUTTON -->
+            <div class="game-buttons">
+                <button class="action-btn" onclick="clearPlots()">🧹 Clear</button>
+                <button class="action-btn" onclick="undoMove()">↩️ Undo</button>
+                <button class="action-btn" onclick="redoMove()">↪️ Redo</button>
+                <button class="action-btn restart-btn" onclick="resetGame()">🔄 Restart Game</button>
+                <button class="action-btn" onclick="toggleMusic()">🎵 Mute/Unmute Music</button>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- AUDIO ELEMENTS -->
+
+    <!-- GAME SCRIPT -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

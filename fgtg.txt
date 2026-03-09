@@ -1,0 +1,8 @@
+const allCrops = [
+  {id: 'corn', src: 'https://pics.clipartpng.com/midle/Corn_PNG_Clipart-466.png'},
+  {id: 'wheat', src: 'https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Fall-PNG/Ripe_Wheat_Classes_PNG_Clip_Art_Image.png?m=1629831477'},
+  {id: 'tomato', src: 'https://pics.clipartpng.com/midle/Tomatoes_Branch_PNG_Clipart-484.png'},
+  {id: 'carrot', src: 'https://pics.clipartpng.com/midle/Carrots_PNG_Clipart-465.png'},
+  {id: 'potato', src: 'https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Vegetables-PNG/Potatoes_PNG_Clipart.png?m=1629833754'},
+  {id: 'beans', src: 'https://freepngimg.com/thumb/kidney_bean/144733-beans-organic-kidney-red-free-clipart-hq.png'}
+];
