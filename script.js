@@ -1,277 +1,436 @@
-/* ===== AUDIO ===== */
-const bgMusic = new Audio("audio/background.mp3");
-bgMusic.loop = true;
-bgMusic.volume = 0.3;
-bgMusic.play().catch(() => console.log("Autoplay blocked; click to start music"));
+/* AUDIO */
 
-const correctSound = new Audio("audio/correct.wav");
-const wrongSound = new Audio("audio/wrong.wav");
-const placeSound = new Audio("audio/place.wav");
-const restartSound = new Audio("audio/restart.wav");
-const clearSound = new Audio("audio/clear.wav");
-const undoSound = new Audio("audio/backforward.wav");
+/* BACKGROUND MUSIC */
 
-/* ===== ELEMENTS ===== */
-const plots = document.querySelectorAll(".plot");
-const cropContainer = document.getElementById("cropContainer");
-const roundText = document.getElementById("round");
-const scoreText = document.getElementById("score");
+const bgMusic = new Audio("audio/background.mp3")
 
-/* ===== VARIABLES ===== */
-let score = 0;
-let round = 1;
-let draggedCrop = null;
-const totalRounds = 3;
+bgMusic.loop = true
+bgMusic.volume = 0.4
 
-/* ===== UNDO/REDO STACKS ===== */
-let undoStack = [];
-let redoStack = [];
+let musicMuted = false
 
-/* ===== CROPS ===== */
-const cropData = {
-  corn: { icon: "🌽", name: "Corn" },
-  pumpkin: { icon: "🎃", name: "Pumpkin" },
-  beans: { icon: "🫘", name: "Beans" },
-  tomato: { icon: "🍅", name: "Tomato" },
-  lettuce: { icon: "🥬", name: "Lettuce" },
-  carrot: { icon: "🥕", name: "Carrot" },
-  potato: { icon: "🥔", name: "Potato" }
-};
+/* Start music when page loads */
 
-/* ===== ALL CORRECT ROTATIONS ===== */
-const correctRotationsList = [
-  ["corn", "beans", "tomato", "carrot"],
-  ["corn", "beans", "lettuce", "carrot"],
-  ["pumpkin", "beans", "tomato", "carrot"],
-  ["pumpkin", "beans", "lettuce", "carrot"],
-  ["corn", "lettuce", "beans", "carrot"],
-  ["pumpkin", "lettuce", "beans", "carrot"],
-  ["carrot", "corn", "beans", "tomato"],
-  ["carrot", "corn", "beans", "lettuce"],
-  ["potato", "corn", "beans", "tomato"],
-  ["potato", "pumpkin", "beans", "lettuce"],
-  ["carrot", "pumpkin", "beans", "tomato"],
-  ["carrot", "pumpkin", "beans", "lettuce"]
-];
+window.addEventListener("load", () => {
 
-/* ===== START GAME ===== */
-startRound();
+    bgMusic.play().catch(() => {
 
-/* ===== START ROUND ===== */
-function startRound(){
+        /* Some browsers require interaction */
+        document.body.addEventListener("click", () => {
 
-  // Pick a valid rotation
-  const validRotation = shuffle([...correctRotationsList])[0];
+            bgMusic.play()
 
-  // Use its crops
-  const selectedCrops = [...validRotation];
+        }, { once: true })
 
-  // Shuffle so learner must arrange them
-  const misarranged = shuffle([...selectedCrops]);
+    })
 
-  cropContainer.innerHTML="";
+})
 
-  misarranged.forEach(crop=>{
-    const div = document.createElement("div");
-    div.className="crop";
-    div.draggable = true;
-    div.id = crop;
-    div.innerHTML = cropData[crop].icon + " " + cropData[crop].name;
+const correctSound = new Audio("audio/correct.wav")
+const wrongSound = new Audio("audio/wrong.wav")
+const placeSound = new Audio("audio/place.wav")
+const clearSound = new Audio("audio/clear.wav")
+const restartSound = new Audio("audio/restart.wav")
+const undoSound = new Audio("audio/backforward.wav")
+const redoSound = new Audio("audio/backforward.wav")
 
-    div.addEventListener("dragstart",()=>{
-      draggedCrop = crop;
-    });
-
-    cropContainer.appendChild(div);
-  });
-
-  // Reset plots
-  plots.forEach(plot=>{
-    plot.innerHTML = plot.id.toUpperCase();
-    plot.dataset.crop="";
-  });
-
-  // Clear undo/redo stacks
-  undoStack = [];
-  redoStack = [];
-}
-
-/* ===== DRAG & DROP ===== */
-plots.forEach(plot => {
-  plot.addEventListener("dragover", e => e.preventDefault());
-  plot.addEventListener("drop", () => {
-    if (!draggedCrop) return;
-
-    // Play place sound
-    placeSound.currentTime = 0;
-    placeSound.play();
-
-    // Save previous state for undo
-    const previousState = Array.from(plots).map(p => p.dataset.crop || "");
-    undoStack.push(previousState);
-    redoStack = []; // clear redo stack
-
-    plot.dataset.crop = draggedCrop;
-    plot.innerHTML = "";
-    for (let i = 0; i < 12; i++) {
-      const plant = document.createElement("div");
-      plant.className = "plant";
-      plant.innerHTML = cropData[draggedCrop].icon;
-      plot.appendChild(plant);
-    }
-    checkGame();
-  });
-});
-
-/* ===== CHECK GAME ===== */
-function checkGame() {
-  const filled = Array.from(plots).every(plot => plot.dataset.crop);
-  if (!filled) return;
-
-  const learnerArrangement = Array.from(plots).map(plot => plot.dataset.crop);
-
-  const correct = correctRotationsList.some(rotation => {
-    return rotation.join() === learnerArrangement.join();
-  });
-
-  if (correct) {
-    score += 3;
-    scoreText.textContent = score;
-
-    // Play correct sound
-    correctSound.currentTime = 0;
-    correctSound.play();
-
-    alert("🎉 Correct Crop Rotation! +3 points");
-    nextRound();
-  } else {
-    // Play wrong sound
-    wrongSound.currentTime = 0;
-    wrongSound.play();
-
-    alert("❌ Incorrect! Showing correct answer...");
-    showCorrectAnswer();
-  }
-}
-
-/* ===== SHOW CORRECT ANSWER ===== */
-function showCorrectAnswer() {
-  const learnerArrangement = Array.from(plots).map(plot => plot.dataset.crop);
-  const correctRotation = correctRotationsList.find(rotation => {
-    return rotation.filter(c => learnerArrangement.includes(c)).length === 4;
-  }) || correctRotationsList[0];
-
-  plots.forEach((plot, i) => {
-    const correctCrop = correctRotation[i];
-    plot.innerHTML = "";
-    for (let j = 0; j < 12; j++) {
-      const plant = document.createElement("div");
-      plant.className = "plant";
-      plant.innerHTML = cropData[correctCrop].icon;
-      plot.appendChild(plant);
-    }
-  });
-
-  setTimeout(() => nextRound(), 3000);
-}
-
-/* ===== NEXT ROUND ===== */
-function nextRound() {
-  if (round < totalRounds) {
-    round++;
-    roundText.textContent = round;
-    startRound();
-  } else {
-    alert("🏁 Game Over! Final Score: " + score);
-  }
-}
-
-/* ===== RESET GAME ===== */
-function resetGame() {
-  score = 0;
-  round = 1;
-  scoreText.textContent = score;
-  roundText.textContent = round;
-  startRound();
-  restartSound.play();
-}
-
-/* ===== CLEAR PLOTS ===== */
-function clearPlots() {
-  plots.forEach(plot => {
-    plot.innerHTML = plot.id.toUpperCase();
-    plot.dataset.crop = "";
-  });
-
-  // Save empty state for undo
-  const emptyState = Array.from(plots).map(p => p.dataset.crop || "");
-  undoStack.push(emptyState);
-  redoStack = [];
-  clearSound.play();
-}
-
-/* ===== UNDO ===== */
-function undoMove() {
-  undoSound.play();
-  if (undoStack.length === 0) return;
-  const lastState = undoStack.pop();
-  const currentState = Array.from(plots).map(p => p.dataset.crop || "");
-  redoStack.push(currentState);
-
-  plots.forEach((plot, i) => {
-    const crop = lastState[i];
-    plot.dataset.crop = crop;
-    plot.innerHTML = "";
-    if (crop) {
-      for (let j = 0; j < 12; j++) {
-        const plant = document.createElement("div");
-        plant.className = "plant";
-        plant.innerHTML = cropData[crop].icon;
-        plot.appendChild(plant);
-      }
-    } else {
-      plot.innerHTML = plot.id.toUpperCase();
-    }
-  });
-
-}
-
-/* ===== REDO ===== */
-function redoMove() {
-  undoSound.play();
-  if (redoStack.length === 0) return;
-  const nextState = redoStack.pop();
-  const currentState = Array.from(plots).map(p => p.dataset.crop || "");
-  undoStack.push(currentState);
-
-  plots.forEach((plot, i) => {
-    const crop = nextState[i];
-    plot.dataset.crop = crop;
-    plot.innerHTML = "";
-    if (crop) {
-      for (let j = 0; j < 12; j++) {
-        const plant = document.createElement("div");
-        plant.className = "plant";
-        plant.innerHTML = cropData[crop].icon;
-        plot.appendChild(plant);
-      }
-    } else {
-      plot.innerHTML = plot.id.toUpperCase();
-    }
-  });
-
-}
-
-/* ===== TOGGLE MUSIC ===== */
 function toggleMusic() {
-  if (bgMusic.paused) {
-    bgMusic.play();
-  } else {
-    bgMusic.pause();
-  }
+
+    musicMuted = !musicMuted
+
+    bgMusic.muted = musicMuted
+
 }
 
-/* ===== SHUFFLE UTILITY ===== */
+
+/* ELEMENTS */
+
+const plots = document.querySelectorAll(".plot")
+const cropContainer = document.getElementById("cropContainer")
+const roundText = document.getElementById("round")
+const scoreText = document.getElementById("score")
+
+const rotationPatterns = [
+
+    ["deep", "legume", "cereal", "shallow"],
+    ["legume", "cereal", "shallow", "deep"],
+    ["cereal", "shallow", "deep", "legume"],
+    ["shallow", "deep", "legume", "cereal"]
+
+]
+
+
+/* VARIABLES */
+
+let score = 0
+let round = 1
+let draggedCrop = null
+let selectedCrop = null
+
+let undoStack = []
+let redoStack = []
+
+let currentRotation = []
+
+const totalRounds = 5
+
+
+/* CROP GROUPS */
+
+const cropGroups = {
+
+    deep: [
+        { icon: "🍠", name: "Cassava", id: "cassava", type: "deep" },
+        { icon: "🍠", name: "Yam", id: "yam", type: "deep" },
+        { icon: "🍠", name: "Sweet Potato", id: "sweetpotato", type: "deep" }
+    ],
+
+    legume: [
+        { icon: "🫘", name: "Cowpea", id: "cowpea", type: "legume" },
+        { icon: "🫘", name: "Groundnut", id: "groundnut", type: "legume" },
+        { icon: "🫘", name: "Soybean", id: "soybean", type: "legume" }
+    ],
+
+    cereal: [
+        { icon: "🌽", name: "Maize", id: "maize", type: "cereal" },
+        { icon: "🌾", name: "Rice", id: "rice", type: "cereal" },
+        { icon: "🌾", name: "Sorghum", id: "sorghum", type: "cereal" }
+    ],
+
+    shallow: [
+        { icon: "🍅", name: "Tomato", id: "tomato", type: "shallow" },
+        { icon: "🥬", name: "Lettuce", id: "lettuce", type: "shallow" },
+        { icon: "🥬", name: "Cabbage", id: "cabbage", type: "shallow" }
+    ]
+
+}
+
+
+const rotationTypes = ["deep", "legume", "cereal", "shallow"]
+
+
+startRound()
+
+
+function startRound() {
+
+    let selected = []
+
+    rotationTypes.forEach(type => {
+
+        const group = cropGroups[type]
+
+        const crop = group[Math.floor(Math.random() * group.length)]
+
+        selected.push(crop)
+
+    })
+
+    currentRotation = selected.map(c => c.id)
+
+    const shuffled = shuffle([...selected])
+
+    cropContainer.innerHTML = ""
+
+    shuffled.forEach(crop => {
+
+        const div = document.createElement("div")
+
+        div.className = "crop"
+        div.draggable = true
+        div.id = crop.id
+
+        div.innerHTML = crop.icon + " " + crop.name
+
+        div.addEventListener("dragstart", () => draggedCrop = crop.id)
+        div.addEventListener("click", () => selectedCrop = crop.id)
+
+        cropContainer.appendChild(div)
+
+    })
+
+    plots.forEach(plot => {
+        plot.innerHTML = plot.id.toUpperCase()
+        plot.dataset.crop = ""
+    })
+
+    undoStack = []
+    redoStack = []
+
+}
+
+
+/* DROP (PC) */
+
+plots.forEach(plot => {
+
+    plot.addEventListener("dragover", e => e.preventDefault())
+
+    plot.addEventListener("drop", () => {
+
+        if (!draggedCrop) return
+
+        placeCrop(plot, draggedCrop)
+
+    })
+
+})
+
+
+/* TAP (MOBILE) */
+
+plots.forEach(plot => {
+
+    plot.addEventListener("click", () => {
+
+        if (!selectedCrop) return
+
+        placeCrop(plot, selectedCrop)
+
+    })
+
+})
+
+
+function placeCrop(plot, crop) {
+
+    placeSound.currentTime = 0
+    placeSound.play()
+
+    const prev = [...plots].map(p => p.dataset.crop || "")
+
+    undoStack.push(prev)
+    redoStack = []
+
+    plot.dataset.crop = crop
+    plot.innerHTML = ""
+
+    const cropInfo = findCrop(crop)
+
+    for (let i = 0; i < 12; i++) {
+
+        const plant = document.createElement("div")
+
+        plant.className = "plant"
+        plant.innerHTML = cropInfo.icon
+
+        plot.appendChild(plant)
+
+    }
+
+    checkGame()
+
+}
+
+
+function checkGame() {
+
+    const filled = [...plots].every(p => p.dataset.crop)
+
+    if (!filled) return
+
+    /* get learner crop types */
+
+    const learnerTypes = [...plots].map(plot => {
+
+        const crop = findCrop(plot.dataset.crop)
+
+        return crop.type
+
+    })
+
+    /* check against all rotation patterns */
+
+    const correct = rotationPatterns.some(pattern => {
+
+        return pattern.every((type, index) => type === learnerTypes[index])
+
+    })
+
+    if (correct) {
+
+        score += 3
+        scoreText.textContent = score
+
+        correctSound.play()
+
+        alert("Correct Crop Rotation!")
+
+        nextRound()
+
+    } else {
+
+        wrongSound.play()
+
+        alert("Incorrect Rotation. Try again!")
+
+        showCorrect()
+
+    }
+
+}
+
+
+function showCorrect() {
+
+    plots.forEach((plot, i) => {
+
+        plot.innerHTML = ""
+
+        const crop = findCrop(currentRotation[i])
+
+        for (let j = 0; j < 12; j++) {
+
+            const plant = document.createElement("div")
+
+            plant.className = "plant"
+            plant.innerHTML = crop.icon
+
+            plot.appendChild(plant)
+
+        }
+
+    })
+
+    setTimeout(nextRound, 3000)
+
+}
+
+
+function nextRound() {
+
+    if (round < totalRounds) {
+
+        round++
+        roundText.textContent = round
+
+        startRound()
+
+    } else {
+
+        alert("Game Over! Final Score: " + score)
+
+    }
+
+}
+
+
+function resetGame() {
+
+    score = 0
+    round = 1
+
+    scoreText.textContent = 0
+    roundText.textContent = 1
+
+    startRound()
+
+    restartSound.play();
+
+}
+
+
+function clearPlots() {
+
+    plots.forEach(plot => {
+        plot.innerHTML = plot.id.toUpperCase()
+        plot.dataset.crop = ""
+    })
+
+    clearSound.play();
+
+}
+
+
+function undoMove() {
+    redoSound.pause();
+    redoSound.currentTime = 0;
+    undoSound.pause();
+    undoSound.currentTime = 0;
+    if (!undoStack.length) return
+
+    const last = undoStack.pop()
+
+    redoStack.push([...plots].map(p => p.dataset.crop || ""))
+
+    applyState(last)
+
+    undoSound.play();
+
+}
+
+
+function redoMove() {
+    redoSound.pause();
+    redoSound.currentTime = 0;
+    undoSound.pause();
+    undoSound.currentTime = 0;
+    if (!redoStack.length) return
+
+    const next = redoStack.pop()
+
+    undoStack.push([...plots].map(p => p.dataset.crop || ""))
+
+    applyState(next)
+
+    redoSound.play();
+
+
+}
+
+
+function applyState(state) {
+
+    plots.forEach((plot, i) => {
+
+        const crop = state[i]
+
+        plot.dataset.crop = crop
+        plot.innerHTML = ""
+
+        if (crop) {
+
+            const cropInfo = findCrop(crop)
+
+            for (let j = 0; j < 12; j++) {
+
+                const plant = document.createElement("div")
+
+                plant.className = "plant"
+                plant.innerHTML = cropInfo.icon
+
+                plot.appendChild(plant)
+
+            }
+
+        } else {
+
+            plot.innerHTML = plot.id.toUpperCase()
+
+        }
+
+    })
+
+}
+
+
+function findCrop(id) {
+
+    for (const group in cropGroups) {
+
+        for (const crop of cropGroups[group]) {
+
+            if (crop.id === id) return crop
+
+        }
+
+    }
+
+}
+
+
 function shuffle(arr) {
-  return arr.sort(() => Math.random() - 0.5);
+
+    return arr.sort(() => Math.random() - .5)
+
 }

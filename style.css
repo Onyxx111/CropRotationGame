@@ -1,105 +1,66 @@
-/* ===== PAGE ===== */
-
 body{
-margin:0;
-font-family:Arial, sans-serif;
 
-/* Farm background */
+margin:0;
+font-family:Arial;
+
 background-image:url("images/farm-background.jpg");
 background-size:cover;
 background-position:center;
-background-repeat:no-repeat;
 
-min-height:100vh;
 }
 
-/* Transparent overlay so text is readable */
 .main-container{
+
 display:flex;
 min-height:100vh;
-background:rgba(255,255,255,0.15);
-backdrop-filter:blur(3px);
-}
 
-/* ===== LEFT HINT PANEL ===== */
+background:rgba(255,255,255,0.2);
+backdrop-filter:blur(3px);
+
+}
 
 .sidebar{
 
-width:300px;
+width:260px;
 background:#2e7d32;
 color:white;
-
 padding:20px;
-box-sizing:border-box;
 
 }
-
-.sidebar h2{
-margin-top:0;
-}
-
-.sidebar p{
-line-height:1.5;
-}
-
-/* ===== GAME AREA ===== */
 
 .game-area{
 
 flex:1;
 text-align:center;
-
 padding:20px;
 
 }
 
-h1{
-color:#1b5e20;
-margin-bottom:10px;
-}
-
-/* ===== SCORE INFO ===== */
-
-.game-info{
-font-size:18px;
-margin-bottom:20px;
-font-weight:bold;
-}
-
-/* ===== GAME LAYOUT ===== */
-
 .game-container{
+
 display:flex;
 justify-content:center;
-align-items:flex-start;
-gap:80px;
+gap:60px;
 flex-wrap:wrap;
-}
 
-/* ===== FARM PLOTS ===== */
+}
 
 .plots{
-display:grid;
-grid-template-columns:repeat(2,160px);
-gap:25px;
-}
 
-/* ===== SINGLE PLOT ===== */
+display:grid;
+grid-template-columns:repeat(2,150px);
+gap:20px;
+
+}
 
 .plot{
 
-width:160px;
-height:160px;
+width:150px;
+height:150px;
 
-/* soil color */
 background:#6d4c41;
 border:4px solid #3e2723;
 border-radius:10px;
-
-/* soil depth effect */
-box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-
-/* crop grid */
 
 display:grid;
 grid-template-columns:repeat(4,1fr);
@@ -108,14 +69,10 @@ grid-template-rows:repeat(3,1fr);
 gap:4px;
 padding:6px;
 
-overflow:hidden;
-
-font-size:12px;
 color:white;
+font-size:12px;
 
 }
-
-/* ===== CROPS INSIDE PLOT ===== */
 
 .plant{
 
@@ -126,12 +83,11 @@ justify-content:center;
 font-size:18px;
 
 opacity:0;
-transform:scale(0.3);
-animation:grow 0.5s forwards;
+transform:scale(.3);
+
+animation:grow .4s forwards;
 
 }
-
-/* ===== GROW ANIMATION ===== */
 
 @keyframes grow{
 
@@ -142,116 +98,85 @@ transform:scale(1);
 
 }
 
-/* ===== SIDE CROPS ===== */
-
 .crops{
+
 display:flex;
 flex-direction:column;
-gap:15px;
-}
+gap:12px;
 
-/* ===== DRAGGABLE CROPS ===== */
+}
 
 .crop{
 
-display:flex;
-align-items:center;
-gap:10px;
-
-font-size:20px;
-
 background:white;
-padding:8px 12px;
+padding:8px 10px;
 border-radius:8px;
 
 cursor:grab;
 
-box-shadow:0 2px 5px rgba(0,0,0,0.3);
+box-shadow:0 2px 6px rgba(0,0,0,.3);
 
-transition:transform 0.2s;
+font-size:18px;
 
 }
 
-.crop:hover{
-transform:scale(1.05);
-}
+/* Button container */
 
-/* ===== BUTTONS AREA ===== */
+.game-buttons{
 
-.game-buttons {
-margin-top:20px;
+margin-top:25px;
 display:flex;
-gap:15px;
-justify-content:center;
 flex-wrap:wrap;
+gap:14px;
+justify-content:center;
+
 }
 
-/* ===== COMMON BUTTON STYLE ===== */
+button{
 
-.action-btn {
-
-background-color:#4CAF50;
-color:white;
-
+padding:12px 18px;
 border:none;
-padding:12px 22px;
+border-radius:10px;
 
-font-size:16px;
-
-border-radius:8px;
+font-size:15px;
+font-weight:600;
 
 cursor:pointer;
 
-transition:all 0.3s ease;
+background:linear-gradient(135deg,#4CAF50,#2e7d32);
+color:white;
 
-box-shadow:0 5px #2e7d32;
+box-shadow:0 4px 8px rgba(0,0,0,0.3);
+
+transition:all 0.25s ease;
 
 }
 
-/* Hover animation */
+/* Hover effect */
 
-.action-btn:hover {
+button:hover{
 
 transform:translateY(-3px) scale(1.05);
-box-shadow:0 8px #2e7d32;
+
+box-shadow:0 6px 14px rgba(0,0,0,0.4);
+
+background:linear-gradient(135deg,#66bb6a,#1b5e20);
 
 }
 
 /* Click effect */
 
-.action-btn:active {
+button:active{
 
-transform:translateY(2px) scale(0.98);
-box-shadow:0 3px #2e7d32;
+transform:scale(.95);
 
-}
-
-/* Restart button color */
-
-.restart-btn {
-
-background-color:#f39c12;
-box-shadow:0 5px #b06e0e;
+box-shadow:0 2px 6px rgba(0,0,0,0.3);
 
 }
 
-.restart-btn:hover {
+/* MOBILE */
 
-transform:translateY(-3px) scale(1.05);
-box-shadow:0 8px #b06e0e;
-
-}
-
-.restart-btn:active {
-
-transform:translateY(2px) scale(0.98);
-box-shadow:0 3px #b06e0e;
-
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-
-@media(max-width:900px){
+@media(max-width:768px){
 
 .main-container{
 flex-direction:column;
@@ -262,7 +187,23 @@ width:100%;
 }
 
 .game-container{
-gap:40px;
+flex-direction:column;
+align-items:center;
+}
+
+.plots{
+grid-template-columns:repeat(2,120px);
+}
+
+.plot{
+width:120px;
+height:120px;
+}
+
+.crops{
+flex-direction:row;
+flex-wrap:wrap;
+justify-content:center;
 }
 
 }
