@@ -49,6 +49,13 @@ const plots = document.querySelectorAll(".plot")
 const cropContainer = document.getElementById("cropContainer")
 const roundText = document.getElementById("round")
 const scoreText = document.getElementById("score")
+const celebration = document.getElementById("celebration")
+const celebration1 = document.getElementById("celebration1")
+const badgeBox = document.getElementById("badgeBox")
+const badgeText = document.getElementById("badgeText")
+const tractor = document.getElementById("tractor")
+
+let isDay = true
 
 const rotationPatterns = [
 
@@ -247,28 +254,41 @@ function checkGame() {
 
     })
 
+
     if (correct) {
 
         score += 3
         scoreText.textContent = score
 
-        correctSound.play()
+        correctSound.currentTime = 0
+        correctSound.play().catch(()=>{})
 
-        alert("Correct Crop Rotation!")
+        showCelebration()
 
-        nextRound()
+        checkBadges()
+
+        setTimeout(()=>{
+
+            tractorAnimation()
+
+        },800)
+
+        setTimeout(nextRound,2000)
 
     } else {
 
-        wrongSound.play()
+        wrongSound.currentTime = 0
+        wrongSound.play().catch(()=>{})
 
-        alert("Incorrect Rotation. Try again!")
+        showCelebration1()
 
         showCorrect()
 
     }
 
 }
+
+
 
 
 function showCorrect() {
@@ -304,6 +324,8 @@ function nextRound() {
         round++
         roundText.textContent = round
 
+        toggleDayNight()
+
         startRound()
 
     } else {
@@ -311,6 +333,24 @@ function nextRound() {
         alert("Game Over! Final Score: " + score)
 
     }
+
+}
+
+function toggleDayNight(){
+
+if(isDay){
+
+document.body.classList.remove("day")
+document.body.classList.add("night")
+
+}else{
+
+document.body.classList.remove("night")
+document.body.classList.add("day")
+
+}
+
+isDay=!isDay
 
 }
 
@@ -432,5 +472,80 @@ function findCrop(id) {
 function shuffle(arr) {
 
     return arr.sort(() => Math.random() - .5)
+
+}
+
+function showCelebration(){
+
+celebration.classList.remove("hidden")
+
+setTimeout(()=>{
+
+celebration.classList.add("hidden")
+
+},1800)
+
+}
+
+function showCelebration1(){
+
+celebration1.classList.remove("hidden")
+
+setTimeout(()=>{
+
+celebration1.classList.add("hidden")
+
+},900)
+
+}
+
+
+function tractorAnimation(){
+
+tractor.classList.remove("hidden")
+
+setTimeout(()=>{
+
+tractor.classList.add("hidden")
+
+},4000)
+
+}
+
+
+function checkBadges(){
+
+if(score===9){
+
+showBadge("🌱 Beginner Farmer")
+
+}
+
+if(score===18){
+
+showBadge("🌾 Skilled Rotator")
+
+}
+
+if(score===30){
+
+showBadge("👨‍🌾 Master Farmer")
+
+}
+
+}
+
+
+function showBadge(text){
+
+badgeText.innerText=text
+
+badgeBox.classList.remove("hidden")
+
+setTimeout(()=>{
+
+badgeBox.classList.add("hidden")
+
+},3000)
 
 }

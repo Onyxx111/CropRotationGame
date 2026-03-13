@@ -3,75 +3,126 @@
 
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Crop Rotation Game</title>
+    <title>Crop Rotation Game</title>
 
-<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
 
 </head>
 
+
+
 <body>
 
-<div class="main-container">
+    <div class="main-container">
 
 
 
-<div class="game-area">
+        <div class="game-area">
 
-<h1>🌾 Crop Rotation Game</h1>
+            <h1>🌾 Crop Rotation Game</h1>
 
-<div class="game-info">
+            <div class="game-info">
 
-Round: <span id="round">1</span> |
-Score: <span id="score">0</span>
+                Round: <span id="round">1</span> |
+                Score: <span id="score">0</span>
 
-</div>
+            </div>
 
-<div class="game-container">
+            <div class="game-container">
 
-<div class="plots">
+                <div class="plots">
 
-<div class="plot" id="plot1">Year 1</div>
-<div class="plot" id="plot2">Year 2</div>
-<div class="plot" id="plot3">Year 3</div>
-<div class="plot" id="plot4">Year 4</div>
+                    <div class="plot" id="plot1">Year 1</div>
+                    <div class="plot" id="plot2">Year 2</div>
+                    <div class="plot" id="plot3">Year 3</div>
+                    <div class="plot" id="plot4">Year 4</div>
 
-</div>
+                </div>
 
-<div class="crops" id="cropContainer"></div>
+                <div class="crops" id="cropContainer"></div>
 
-</div>
+            </div>
 
-<div class="game-buttons">
+            <div class="game-buttons">
 
-<button onclick="clearPlots()">🧹 Clear</button>
-<button onclick="undoMove()">↩ Undo</button>
-<button onclick="redoMove()">↪ Redo</button>
-<button onclick="resetGame()">🔄 Restart</button>
-<button class="action-btn" onclick="toggleMusic()">🎵 Mute/Unmute Music</button>
+                <button onclick="clearPlots()">🧹 Clear</button>
+                <button onclick="undoMove()">↩ Undo</button>
+                <button onclick="redoMove()">↪ Redo</button>
+                <button onclick="resetGame()">🔄 Restart</button>
+                <button class="action-btn" onclick="toggleMusic()">🎵 Mute/Unmute Music</button>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-<div class="sidebar">
+        <div class="sidebar">
+            <p>
+                Avoid planting the same crop repeatedly.
+                Cereal should follow legumes.
+            </p>
+            <h2>🌱 Crop Rotation Principle</h2>
 
-<h2>🌱 Crop Rotation Principle</h2>
+            <ul>
+                <li>Deep-rooted crops use nutrients from deep soil.</li>
+                <li>Shallow-rooted crops use nutrients from the topsoil.</li>
+                <li>Legumes restore nitrogen to the soil.</li>
+                <li>Cereals then use the improved nutrients.</li>
+            </ul>
 
-<ul>
-<li>Deep-rooted crops use nutrients from deep soil.</li>
-<li>Shallow-rooted crops use nutrients from the topsoil.</li>
-<li>Legumes restore nitrogen to the soil.</li>
-<li>Cereals then use the improved nutrients.</li>
-</ul>
+            <div>
+                <a href="https://example.com">Crop Rotation Farming System Game</a> © 2026 by <a
+                    href="https://example.com">Opoku Shammel Akwasi</a> is licensed under <a
+                    href="https://creativecommons.org/licenses/by-nc-nd/4.0/">CC BY-NC-ND 4.0</a><img
+                    src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt=""
+                    style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
+                    src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt=""
+                    style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
+                    src="https://mirrors.creativecommons.org/presskit/icons/nc.svg" alt=""
+                    style="max-width: 1em;max-height:1em;margin-left: .2em;"><img
+                    src="https://mirrors.creativecommons.org/presskit/icons/nd.svg" alt=""
+                    style="max-width: 1em;max-height:1em;margin-left: .2em;">
+            </div>
 
-</div>
+        </div>
 
-</div>
+    </div>
 
-<script src="script.js"></script>
+    <!-- CELEBRATION POPUP -->
+
+    <div id="celebration" class="celebration hidden">
+
+        <h2>🎉 Correct Crop Rotation!</h2>
+
+        <div class="coin-reward">+3 🪙</div>
+
+    </div>
+
+    <div id="celebration1" class="celebration hidden">
+
+        <h2>❌ Wrong Crop Rotation! 🥺</h2>
+
+    </div>
+
+    <!-- BADGE -->
+
+    <div id="badgeBox" class="badge-box hidden">
+
+        <h3>🏆 Achievement Unlocked!</h3>
+
+        <div id="badgeText"></div>
+
+    </div>
+
+
+    <!-- TRACTOR -->
+
+    <div id="tractor" class="tractor hidden">🚜</div>
+
+    <script src="script.js"></script>
 
 </body>
+
 </html>

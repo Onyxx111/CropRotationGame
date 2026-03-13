@@ -49,7 +49,7 @@ flex-wrap:wrap;
 
 display:grid;
 grid-template-columns:repeat(2,150px);
-gap:20px;
+gap:21px;
 
 }
 
@@ -58,8 +58,8 @@ gap:20px;
 width:150px;
 height:150px;
 
-background:#6d4c41;
-border:4px solid #3e2723;
+background:linear-gradient(#5d4037,#3e2723);
+border:4px solid #01c030;
 border-radius:10px;
 
 display:grid;
@@ -117,6 +117,13 @@ cursor:grab;
 box-shadow:0 2px 6px rgba(0,0,0,.3);
 
 font-size:18px;
+
+}
+
+.crop:hover{
+
+transform:scale(1.08) rotate(-2deg);
+background:#f1f8e9;
 
 }
 
@@ -206,4 +213,132 @@ flex-wrap:wrap;
 justify-content:center;
 }
 
+}
+
+/* CELEBRATION POPUP */
+
+.celebration{
+
+position:fixed;
+
+top:50%;
+left:50%;
+
+transform:translate(-50%,-50%);
+
+background:white;
+
+padding:40px;
+
+border-radius:20px;
+
+box-shadow:0 10px 30px rgba(0,0,0,.4);
+
+text-align:center;
+
+z-index:2000;
+
+animation:pop .4s ease;
+
+}
+
+.hidden{
+display:none;
+}
+
+@keyframes pop{
+
+0%{
+transform:translate(-50%,-60%) scale(.6);
+opacity:0;
+}
+
+100%{
+transform:translate(-50%,-50%) scale(1);
+opacity:1;
+}
+
+}
+
+/* COIN FLOAT */
+
+.coin-reward{
+
+font-size:28px;
+
+margin-top:10px;
+
+animation:floatCoin 1.5s infinite;
+
+}
+
+@keyframes floatCoin{
+
+0%{transform:translateY(0)}
+50%{transform:translateY(-10px)}
+100%{transform:translateY(0)}
+
+}
+
+/* TRACTOR */
+
+.tractor{
+
+position:fixed;
+
+bottom:30px;
+
+font-size:60px;
+
+left:-120px;
+
+animation:tractorMove 4s linear;
+
+z-index:1500;
+
+}
+
+@keyframes tractorMove{
+
+from{left:-120px}
+to{left:110%}
+
+}
+
+/* BADGE */
+
+.badge-box{
+
+position:fixed;
+
+bottom:20px;
+right:20px;
+
+background:white;
+
+padding:20px;
+
+border-radius:14px;
+
+box-shadow:0 8px 20px rgba(0,0,0,.3);
+
+animation:badgePop .5s ease;
+
+}
+
+@keyframes badgePop{
+
+0%{transform:scale(.6)}
+100%{transform:scale(1)}
+
+}
+
+/* DAY NIGHT EFFECT */
+
+body.day{
+filter:brightness(1);
+}
+
+body.night{
+filter:brightness(.7) hue-rotate(200deg);
 }
